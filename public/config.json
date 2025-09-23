@@ -1,0 +1,33 @@
+
+{
+  "prakashauto": {
+    "logo": "/logos/prakash.png",
+    "brandName": "Prakash Auto Consultant",
+    "theme": {
+      "primary": "#4F46E5",
+      "secondary": "#6366F1", 
+      "accent": "#10B981",
+      "background": "#F8FAFC"
+    }
+  },
+  "superdrive": {
+    "logo": "/logos/superdrive.png", 
+    "brandName": "SuperDrive Partners",
+    "theme": {
+      "primary": "#1D4ED8",
+      "secondary": "#3B82F6",
+      "accent": "#F59E0B",
+      "background": "#F1F5F9"
+    }
+  },
+  "default": {
+    "logo": "/logos/default.png",
+    "brandName": "Vehicle Records",
+    "theme": {
+      "primary": "#2563EB",
+      "secondary": "#3B82F6", 
+      "accent": "#059669",
+      "background": "#F8FAFC"
+    }
+  }
+}

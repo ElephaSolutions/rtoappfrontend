@@ -1,0 +1,13 @@
+
+[
+  {
+    "id": 1,
+    "vehicleNo": "KA05MX1234",
+    "fitnessValid": "2024-12-31",
+    "insuranceValid": "2024-08-15",
+    "permitValid": "2024-10-20",
+    "taxValid": "2024-06-30",
+    "pucValid": "2024-07-15",
+    "contactNumber": "+91 98765 43210"
+  }
+]
