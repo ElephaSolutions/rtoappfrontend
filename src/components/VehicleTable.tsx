@@ -19,24 +19,66 @@ interface Vehicle {
   contactNumber: string;
 }
 
+interface VehicleResponseItem {
+  vehicleNumber: string,
+  fcExpiryDate: string,
+  insuranceExpiryDate: string,
+  permitExpiryDate: string,
+  taxDueDate: string,
+  pollutionCertificateExpiryDate: string,
+  contactNumber: string,
+}
+
+interface VehicleResponseBody {
+  vehicles: VehicleResponseItem[],
+  totalVehicles: number,
+}
+
+const BACKEND_URL = "http://localhost:8081/api/v1/vehicle";
+const PAGE_QUERY_PARAM = "page";
+const PAGE_SIZE_QUERY_PARAM = "page_size";
+
 const VehicleTable = () => {
   const { config } = useBusinessConfig();
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [totalVehicleItems, setTotalVehicleItems] = useState(0)
   
   const itemsPerPage = 10;
 
   useEffect(() => {
     loadVehicles();
-  }, []);
+  }, [currentPage]);
 
   const loadVehicles = async () => {
     try {
-      const response = await fetch('/data/vehicles.json');
-      const data = await response.json();
-      setVehicles(data);
+      const response = await fetch(
+        `${BACKEND_URL}?${PAGE_QUERY_PARAM}=${currentPage}&${PAGE_SIZE_QUERY_PARAM}=${itemsPerPage}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      const data: VehicleResponseBody = await response.json();
+      setVehicles(data.vehicles.map(
+        (vehicle, index) => {
+          return {
+            id: index,
+            vehicleNo: vehicle.vehicleNumber,
+            fitnessValid: new Date(vehicle.fcExpiryDate).toDateString(),
+            insuranceValid: new Date(vehicle.insuranceExpiryDate).toDateString(),
+            permitValid: new Date(vehicle.permitExpiryDate).toDateString(),
+            taxValid: new Date(vehicle.taxDueDate).toDateString(),
+            pucValid: new Date(vehicle.pollutionCertificateExpiryDate).toDateString(),
+            contactNumber: vehicle.contactNumber,
+          }
+        }
+      ));
+      setTotalVehicleItems(data.totalVehicles)
     } catch (error) {
       console.error('Failed to load vehicles:', error);
       toast({
@@ -83,9 +125,8 @@ const VehicleTable = () => {
     vehicle.contactNumber.includes(searchTerm)
   );
 
-  const totalPages = Math.ceil(filteredVehicles.length / itemsPerPage);
+  const totalPages = Math.ceil(totalVehicleItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedVehicles = filteredVehicles.slice(startIndex, startIndex + itemsPerPage);
 
   if (loading) {
     return (
@@ -111,7 +152,7 @@ const VehicleTable = () => {
               </div>
               <div>
                 <CardTitle className="text-2xl font-bold text-gray-900">Vehicle Records</CardTitle>
-                <p className="text-gray-600 mt-1">{filteredVehicles.length} vehicles found</p>
+                <p className="text-gray-600 mt-1">{totalVehicleItems} vehicles found</p>
               </div>
             </div>
             
@@ -129,7 +170,7 @@ const VehicleTable = () => {
         </CardHeader>
 
         <CardContent>
-          {paginatedVehicles.length === 0 ? (
+          {filteredVehicles.length === 0 ? (
             <div className="text-center py-12">
               <Car className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500 text-lg">No vehicles found</p>
@@ -152,7 +193,7 @@ const VehicleTable = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {paginatedVehicles.map((vehicle) => (
+                    {filteredVehicles.map((vehicle) => (
                       <tr key={vehicle.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
                         <td className="py-4 px-4">
                           <div className="font-medium text-gray-900">{vehicle.vehicleNo}</div>
@@ -222,7 +263,7 @@ const VehicleTable = () => {
               {totalPages > 1 && (
                 <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
                   <div className="text-sm text-gray-600">
-                    Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredVehicles.length)} of {filteredVehicles.length} vehicles
+                    Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, startIndex + filteredVehicles.length)} of {totalVehicleItems} vehicles
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button

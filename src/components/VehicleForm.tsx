@@ -18,6 +18,18 @@ interface VehicleFormData {
   contactNumber: string;
 }
 
+interface VehicleRequestBody {
+    vehicleNumber: string,
+    fcExpiryDate: string,
+    insuranceExpiryDate: string,
+    permitExpiryDate: string,
+    taxDueDate: string,
+    pollutionCertificateExpiryDate: string,
+    contactNumber: string,
+}
+
+const BACKEND_URL = "http://localhost:8081/api/v1/vehicle";
+
 const VehicleForm = () => {
   const { config } = useBusinessConfig();
   const [formData, setFormData] = useState<VehicleFormData>({
@@ -73,18 +85,44 @@ const VehicleForm = () => {
     if (!validateForm()) return;
 
     setIsSubmitting(true);
+    
+    const requestBody: VehicleRequestBody = {  
+      vehicleNumber: formData.vehicleNo,
+      fcExpiryDate: formData.fitnessValid,
+      insuranceExpiryDate: formData.insuranceValid,
+      permitExpiryDate: formData.permitValid,
+      taxDueDate: formData.taxValid,
+      pollutionCertificateExpiryDate: formData.pucValid,
+      contactNumber: formData.contactNumber,
+    }
 
     try {
       // Simulate API call - in real app, this would save to backend
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      console.log('Vehicle data saved:', formData);
-      
-      toast({
-        title: "Success!",
-        description: "Vehicle record has been saved successfully.",
-      });
+      const response = await fetch(
+          BACKEND_URL,
+          {
+            method: "POST",
+            body: JSON.stringify(requestBody),
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+        );
 
+      if (response.status === 200)
+        toast({
+          title: "Success!",
+          description: "Vehicle record has been saved successfully.",
+        });
+      else
+        throw new Error(`Received response with status code ${response.status}`);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save vehicle record. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
       // Reset form
       setFormData({
         vehicleNo: '',
@@ -95,14 +133,6 @@ const VehicleForm = () => {
         pucValid: '',
         contactNumber: ''
       });
-
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to save vehicle record. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
       setIsSubmitting(false);
     }
   };
