@@ -50,7 +50,7 @@ const VehicleTable = () => {
 
   useEffect(() => {
     loadVehicles();
-  }, [currentPage]);
+  }, [currentPage, totalVehicleItems]);
 
   const loadVehicles = async () => {
     try {
@@ -91,12 +91,32 @@ const VehicleTable = () => {
     }
   };
 
-  const handleDelete = (id: number) => {
-    setVehicles(prev => prev.filter(vehicle => vehicle.id !== id));
-    toast({
-      title: "Success",
-      description: "Vehicle record deleted successfully"
-    });
+  const handleDelete = (vehicleNumber: string) => {
+    fetch(
+      BACKEND_URL,
+      {
+        method: "DELETE",
+        headers: {
+          "vehicle_number": vehicleNumber
+        },
+      }
+    ).then(
+      response => {
+        if(response.ok) {
+          toast({
+            title: "Success",
+            description: "Vehicle record deleted successfully"
+          });
+          setTotalVehicleItems(currentValue => currentValue - 1)
+        } else {
+          toast({
+            title: "Error",
+            description: `Failed to delete vehicle ${vehicleNumber}`,
+            variant: "destructive"
+          });
+        }
+      }
+    )
   };
 
   const isExpired = (dateString: string) => {
@@ -248,7 +268,7 @@ const VehicleTable = () => {
                               variant="outline"
                               size="sm"
                               className="p-2 h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
-                              onClick={() => handleDelete(vehicle.id)}
+                              onClick={() => handleDelete(vehicle.vehicleNo)}
                             >
                               <Trash className="w-3 h-3" />
                             </Button>
