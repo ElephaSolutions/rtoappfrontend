@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Edit, Trash, Search, Calendar, Phone, Car } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import VehicleForm from './VehicleForm';
+import {VehicleFormData} from './VehicleForm'
 
 interface Vehicle {
   id: number;
@@ -45,12 +47,14 @@ const VehicleTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [totalVehicleItems, setTotalVehicleItems] = useState(0)
+  const [vehicleFormEnabled, setVehicleFormEnabled] = useState(false)
+  const [vehicleDataToUpdate, setVehicleDataToUpdate] = useState<VehicleFormData>()
   
   const itemsPerPage = 10;
 
   useEffect(() => {
     loadVehicles();
-  }, [currentPage, totalVehicleItems]);
+  }, [currentPage, totalVehicleItems, vehicleFormEnabled]);
 
   const loadVehicles = async () => {
     try {
@@ -90,6 +94,20 @@ const VehicleTable = () => {
       setLoading(false);
     }
   };
+
+  const handleUpdate = (vehicle: Vehicle) => {
+    const vehicleFormData: VehicleFormData = {
+      vehicleNo: vehicle.vehicleNo,
+      fitnessValid: vehicle.fitnessValid,
+      insuranceValid: vehicle.insuranceValid,
+      permitValid: vehicle.permitValid,
+      taxValid: vehicle.taxValid,
+      pucValid: vehicle.pucValid,
+      contactNumber: vehicle.contactNumber
+    }
+    setVehicleDataToUpdate(vehicleFormData)
+    setVehicleFormEnabled(true)
+  }
 
   const handleDelete = (vehicleNumber: string) => {
     fetch(
@@ -159,160 +177,168 @@ const VehicleTable = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <Card className="shadow-xl border-0 bg-white/70 backdrop-blur-sm">
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-            <div className="flex items-center space-x-3">
-              <div 
-                className="w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{ backgroundColor: config?.theme.primary }}
-              >
-                <Car className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <CardTitle className="text-2xl font-bold text-gray-900">Vehicle Records</CardTitle>
-                <p className="text-gray-600 mt-1">{totalVehicleItems} vehicles found</p>
-              </div>
-            </div>
-            
-            <div className="relative max-w-sm">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                type="text"
-                placeholder="Search vehicles..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 h-11"
-              />
-            </div>
-          </div>
-        </CardHeader>
-
-        <CardContent>
-          {filteredVehicles.length === 0 ? (
-            <div className="text-center py-12">
-              <Car className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg">No vehicles found</p>
-              <p className="text-gray-400">Add your first vehicle record to get started</p>
-            </div>
-          ) : (
-            <>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Vehicle No</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Fitness</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Insurance</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Permit</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Tax</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">PUC</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Contact</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-700">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredVehicles.map((vehicle) => (
-                      <tr key={vehicle.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
-                        <td className="py-4 px-4">
-                          <div className="font-medium text-gray-900">{vehicle.vehicleNo}</div>
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="space-y-1">
-                            <div className="text-sm text-gray-600">{vehicle.fitnessValid}</div>
-                            {getValidityBadge(vehicle.fitnessValid)}
-                          </div>
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="space-y-1">
-                            <div className="text-sm text-gray-600">{vehicle.insuranceValid}</div>
-                            {getValidityBadge(vehicle.insuranceValid)}
-                          </div>
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="space-y-1">
-                            <div className="text-sm text-gray-600">{vehicle.permitValid}</div>
-                            {getValidityBadge(vehicle.permitValid)}
-                          </div>
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="space-y-1">
-                            <div className="text-sm text-gray-600">{vehicle.taxValid}</div>
-                            {getValidityBadge(vehicle.taxValid)}
-                          </div>
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="space-y-1">
-                            <div className="text-sm text-gray-600">{vehicle.pucValid}</div>
-                            {getValidityBadge(vehicle.pucValid)}
-                          </div>
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="flex items-center space-x-2 text-sm text-gray-600">
-                            <Phone className="w-4 h-4" />
-                            <span>{vehicle.contactNumber}</span>
-                          </div>
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="p-2 h-8 w-8"
-                              onClick={() => toast({ title: "Edit feature coming soon!" })}
-                            >
-                              <Edit className="w-3 h-3" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="p-2 h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
-                              onClick={() => handleDelete(vehicle.vehicleNo)}
-                            >
-                              <Trash className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
-                  <div className="text-sm text-gray-600">
-                    Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, startIndex + filteredVehicles.length)} of {totalVehicleItems} vehicles
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                      disabled={currentPage === 1}
-                    >
-                      Previous
-                    </Button>
-                    <span className="text-sm text-gray-600">
-                      Page {currentPage} of {totalPages}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                      disabled={currentPage === totalPages}
-                    >
-                      Next
-                    </Button>
-                  </div>
+    <>
+      <div className="space-y-6">
+        <Card className="shadow-xl border-0 bg-white/70 backdrop-blur-sm">
+          <CardHeader>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+              <div className="flex items-center space-x-3">
+                <div 
+                  className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{ backgroundColor: config?.theme.primary }}
+                >
+                  <Car className="w-5 h-5 text-white" />
                 </div>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+                <div>
+                  <CardTitle className="text-2xl font-bold text-gray-900">Vehicle Records</CardTitle>
+                  <p className="text-gray-600 mt-1">{totalVehicleItems} vehicles found</p>
+                </div>
+              </div>
+              
+              <div className="relative max-w-sm">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  type="text"
+                  placeholder="Search vehicles..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 h-11"
+                />
+              </div>
+            </div>
+          </CardHeader>
+
+          <CardContent>
+            {filteredVehicles.length === 0 ? (
+              <div className="text-center py-12">
+                <Car className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-500 text-lg">No vehicles found</p>
+                <p className="text-gray-400">Add your first vehicle record to get started</p>
+              </div>
+            ) : (
+              <>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Vehicle No</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Fitness</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Insurance</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Permit</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Tax</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-700">PUC</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Contact</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredVehicles.map((vehicle) => (
+                        <tr key={vehicle.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+                          <td className="py-4 px-4">
+                            <div className="font-medium text-gray-900">{vehicle.vehicleNo}</div>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="space-y-1">
+                              <div className="text-sm text-gray-600">{vehicle.fitnessValid}</div>
+                              {getValidityBadge(vehicle.fitnessValid)}
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="space-y-1">
+                              <div className="text-sm text-gray-600">{vehicle.insuranceValid}</div>
+                              {getValidityBadge(vehicle.insuranceValid)}
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="space-y-1">
+                              <div className="text-sm text-gray-600">{vehicle.permitValid}</div>
+                              {getValidityBadge(vehicle.permitValid)}
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="space-y-1">
+                              <div className="text-sm text-gray-600">{vehicle.taxValid}</div>
+                              {getValidityBadge(vehicle.taxValid)}
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="space-y-1">
+                              <div className="text-sm text-gray-600">{vehicle.pucValid}</div>
+                              {getValidityBadge(vehicle.pucValid)}
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="flex items-center space-x-2 text-sm text-gray-600">
+                              <Phone className="w-4 h-4" />
+                              <span>{vehicle.contactNumber}</span>
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="flex items-center space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="p-2 h-8 w-8"
+                                onClick={() => handleUpdate(vehicle)}
+                              >
+                                <Edit className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="p-2 h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                onClick={() => handleDelete(vehicle.vehicleNo)}
+                              >
+                                <Trash className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
+                    <div className="text-sm text-gray-600">
+                      Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, startIndex + filteredVehicles.length)} of {totalVehicleItems} vehicles
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                        disabled={currentPage === 1}
+                      >
+                        Previous
+                      </Button>
+                      <span className="text-sm text-gray-600">
+                        Page {currentPage} of {totalPages}
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                        disabled={currentPage === totalPages}
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+      {
+        vehicleFormEnabled && 
+        <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 backdrop-blur-lg'>
+          <VehicleForm formDataValues={vehicleDataToUpdate} onSubmit={() => setVehicleFormEnabled(false)}/>
+        </div>
+      }
+    </>
   );
 };
 

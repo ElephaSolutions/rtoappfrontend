@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { Car, Calendar, Phone } from 'lucide-react';
 
-interface VehicleFormData {
+export interface VehicleFormData {
   vehicleNo: string;
   fitnessValid: string;
   insuranceValid: string;
@@ -30,16 +30,26 @@ interface VehicleRequestBody {
 
 const BACKEND_URL = "http://localhost:8081/api/v1/vehicle";
 
-const VehicleForm = () => {
+const emptyFormDataValues: VehicleFormData = {
+  vehicleNo: '',
+  fitnessValid: '',
+  insuranceValid: '',
+  permitValid: '',
+  taxValid: '',
+  pucValid: '',
+  contactNumber: ''
+}
+
+const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}: {formDataValues: VehicleFormData, onSubmit: () => void}) => {
   const { config } = useBusinessConfig();
   const [formData, setFormData] = useState<VehicleFormData>({
-    vehicleNo: '',
-    fitnessValid: '',
-    insuranceValid: '',
-    permitValid: '',
-    taxValid: '',
-    pucValid: '',
-    contactNumber: ''
+    vehicleNo: formDataValues.vehicleNo,
+    fitnessValid: formDataValues.fitnessValid,
+    insuranceValid: formDataValues.insuranceValid,
+    permitValid: formDataValues.permitValid,
+    taxValid: formDataValues.taxValid,
+    pucValid: formDataValues.pucValid,
+    contactNumber: formDataValues.contactNumber
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -134,6 +144,7 @@ const VehicleForm = () => {
         contactNumber: ''
       });
       setIsSubmitting(false);
+      onSubmit()
     }
   };
 
