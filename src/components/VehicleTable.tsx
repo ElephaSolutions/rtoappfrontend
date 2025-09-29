@@ -36,7 +36,7 @@ interface VehicleResponseBody {
   totalVehicles: number,
 }
 
-const BACKEND_URL = "http://localhost:8081/api/v1/vehicle";
+const BACKEND_URL = "https://rtoappbyourself.onrender.com/api/v1/vehicle";
 const PAGE_QUERY_PARAM = "page";
 const PAGE_SIZE_QUERY_PARAM = "page_size";
 

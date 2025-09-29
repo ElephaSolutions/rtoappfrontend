@@ -28,7 +28,7 @@ interface VehicleRequestBody {
     contactNumber: string,
 }
 
-const BACKEND_URL = "http://localhost:8081/api/v1/vehicle";
+const BACKEND_URL = "https://rtoappbyourself.onrender.com/api/v1/vehicle";
 
 const emptyFormDataValues: VehicleFormData = {
   vehicleNo: '',
