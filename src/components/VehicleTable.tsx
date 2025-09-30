@@ -95,16 +95,25 @@ const VehicleTable = () => {
     }
   };
 
+  const parseAndGetDateStringForForm = (date: string): string => {
+    const dateInstance = new Date(Date.parse(date))
+    const year = dateInstance.getFullYear();
+    const month = String(dateInstance.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(dateInstance.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`
+  }
+
   const handleUpdate = (vehicle: Vehicle) => {
     const vehicleFormData: VehicleFormData = {
       vehicleNo: vehicle.vehicleNo,
-      fitnessValid: vehicle.fitnessValid,
-      insuranceValid: vehicle.insuranceValid,
-      permitValid: vehicle.permitValid,
-      taxValid: vehicle.taxValid,
-      pucValid: vehicle.pucValid,
+      fitnessValid: parseAndGetDateStringForForm(vehicle.fitnessValid),
+      insuranceValid: parseAndGetDateStringForForm(vehicle.insuranceValid),
+      permitValid: parseAndGetDateStringForForm(vehicle.permitValid),
+      taxValid: parseAndGetDateStringForForm(vehicle.taxValid),
+      pucValid: parseAndGetDateStringForForm(vehicle.pucValid),
       contactNumber: vehicle.contactNumber
     }
+    console.log(vehicleFormData)
     setVehicleDataToUpdate(vehicleFormData)
     setVehicleFormEnabled(true)
   }
