@@ -185,7 +185,7 @@ const Dashboard = () => {
               <div key={index} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
                 <div className="flex items-center space-x-3">
                   <div className={`w-2 h-2 rounded-full ${
-                    activity.revisionType === 'ADD' || activity.revisionType === 'MOD' ? 'bg-green-500' : 'bg-orange-500'
+                    activity.revisionType === 'ADD' ? 'bg-green-500' : activity.revisionType === 'MOD' ? 'bg-orange-500' : 'bg-red-500'
                   }`} />
                   <span className="text-gray-900">{activity.vehicleNumber} was {activity.revisionType === 'ADD' ? 'Added' : activity.revisionType === 'MOD' ? 'updated' : 'deleted'}</span>
                 </div>
