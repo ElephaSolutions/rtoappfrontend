@@ -4,39 +4,92 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Car, FileText, Calendar, TrendingUp, Plus, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { act, useEffect, useState } from 'react';
+
+interface MetadataResponse {
+  totalVehicles: number;
+  expiringSoon: number;
+}
+
+interface RecentActivityResponse {
+  revisionType: 'ADD' | 'MOD' | 'MOD';
+  vehicleNumber: string;
+  timestamp: string;
+}
+
+const BACKEND_URL = "https://rtoappbyourself.onrender.com"
 
 const Dashboard = () => {
   const { config } = useBusinessConfig();
+  const [recentActivities, setRecentActivities] = useState<RecentActivityResponse[]>([])
+  const [metadata, setMetadata] = useState<MetadataResponse>({totalVehicles: 0, expiringSoon: 0})
+
+  useEffect(
+    () => {
+      fetch(`${BACKEND_URL}/api/v1/vehicle/recent-activity`)
+      .then(response => {
+        if(!response.ok)
+          throw new Error("Error fetching recent activities from backend")
+        return response.json()
+      })
+      .then(responseJson => {
+        setRecentActivities(responseJson)
+      })
+
+      fetch(`${BACKEND_URL}/api/v1/vehicle/metadata`)
+      .then(response => {
+        if(!response.ok)
+          throw new Error("Error fetching recent activities from backend")
+        return response.json()
+      })
+      .then(responseJson => {
+        setMetadata(responseJson)
+      })
+    }, []
+  )
+
+  const getActivityTimeString = (activity: RecentActivityResponse): string => {
+    const timeSinceActivityOccuredInMilli = Math.abs(new Date() - new Date(activity.timestamp))
+    const timeSinceActivityOccuredInSeconds = timeSinceActivityOccuredInMilli / 1000
+    const timeSinceActivityOccuredInMinutes = timeSinceActivityOccuredInSeconds / 60
+    const timeSinceActivityOccuredInHours = timeSinceActivityOccuredInMinutes / 60
+    if (timeSinceActivityOccuredInHours > 1)
+      return `${Math.ceil(timeSinceActivityOccuredInHours)} hours ago`
+    else if (timeSinceActivityOccuredInMinutes > 1)
+      return `${Math.ceil(timeSinceActivityOccuredInMinutes)} minutes ago`
+    else 
+      return `${Math.ceil(timeSinceActivityOccuredInSeconds)} seconds ago`
+  }
 
   const stats = [
     {
       title: 'Total Vehicles',
-      value: '24',
-      change: '+2 this month',
+      // value: '24',
+      // change: '+2 this month',
       icon: Car,
       color: 'bg-blue-500'
     },
     {
       title: 'Expiring Soon',
-      value: '6',
-      change: 'Next 30 days',
+      // value: '6',
+      // change: 'Next 30 days',
       icon: Calendar,
       color: 'bg-orange-500'
     },
-    {
-      title: 'Documents',
-      value: '144',
-      change: 'All types',
-      icon: FileText,
-      color: 'bg-green-500'
-    },
-    {
-      title: 'This Month',
-      value: '8',
-      change: '+33% from last month',
-      icon: TrendingUp,
-      color: 'bg-purple-500'
-    }
+    // {
+    //   title: 'Documents',
+    //   value: '144',
+    //   change: 'All types',
+    //   icon: FileText,
+    //   color: 'bg-green-500'
+    // },
+    // {
+    //   title: 'This Month',
+    //   value: '8',
+    //   change: '+33% from last month',
+    //   icon: TrendingUp,
+    //   color: 'bg-purple-500'
+    // }
   ];
 
   const quickActions = [
@@ -76,8 +129,8 @@ const Dashboard = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
-                  <p className="text-xs text-gray-500 mt-1">{stat.change}</p>
+                  <p className="text-2xl font-bold text-gray-900 mt-1">{stat.title === 'Total Vehicles' ? metadata.totalVehicles : metadata.expiringSoon}</p>
+                  {/* <p className="text-xs text-gray-500 mt-1">{stat.change}</p> */}
                 </div>
                 <div className={`w-12 h-12 rounded-xl ${stat.color} flex items-center justify-center`}>
                   <stat.icon className="w-6 h-6 text-white" />
@@ -127,19 +180,16 @@ const Dashboard = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {[
-              { action: 'Vehicle KA05MX1234 added', time: '2 hours ago', type: 'success' },
-              { action: 'Insurance expiring for UP12AB5678', time: '1 day ago', type: 'warning' },
-              { action: 'PUC renewed for MH14CD9012', time: '3 days ago', type: 'success' },
-            ].map((activity, index) => (
+            {recentActivities
+            .map((activity, index) => (
               <div key={index} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
                 <div className="flex items-center space-x-3">
                   <div className={`w-2 h-2 rounded-full ${
-                    activity.type === 'success' ? 'bg-green-500' : 'bg-orange-500'
+                    activity.revisionType === 'ADD' || activity.revisionType === 'MOD' ? 'bg-green-500' : 'bg-orange-500'
                   }`} />
-                  <span className="text-gray-900">{activity.action}</span>
+                  <span className="text-gray-900">{activity.vehicleNumber} was {activity.revisionType === 'ADD' ? 'Added' : activity.revisionType === 'MOD' ? 'updated' : 'deleted'}</span>
                 </div>
-                <span className="text-sm text-gray-500">{activity.time}</span>
+                <span className="text-sm text-gray-500">{getActivityTimeString(activity)}</span>
               </div>
             ))}
           </div>
