@@ -10,6 +10,7 @@ import VehicleView from "./pages/VehicleView";
 import LicenseView from "./pages/LicenseView";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,10 @@ const App = () => (
                   <LicenseView />
                 </>
               } 
+            />
+            <Route
+              path="/login"
+              element = {<Login/>}
             />
             <Route path="*" element={<NotFound />} />
           </Routes>

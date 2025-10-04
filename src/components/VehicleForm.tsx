@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { Car, Calendar, Phone } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export interface VehicleFormData {
   vehicleNo: string;
@@ -53,6 +54,7 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -115,15 +117,17 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
             body: JSON.stringify(requestBody),
             headers: {
               "Content-Type": "application/json"
-            }
+            },
+            credentials: 'include'
           }
         );
-
       if (response.status === 200)
         toast({
           title: "Success!",
           description: "Vehicle record has been saved successfully.",
         });
+      else if (response.status === 401 || response.status === 403)
+        navigate("/login")
       else
         throw new Error(`Received response with status code ${response.status}`);
     } catch (error) {

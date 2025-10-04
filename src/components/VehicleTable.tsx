@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Edit, Trash, Search, Calendar, Phone, Car } from 'lucide-react';
+import { Edit, Trash, Search, Calendar, Phone, Car, NavigationOff } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import VehicleForm from './VehicleForm';
 import {VehicleFormData} from './VehicleForm'
+import { useNavigate } from 'react-router-dom';
 
 interface Vehicle {
   id: number;
@@ -49,6 +50,7 @@ const VehicleTable = () => {
   const [totalVehicleItems, setTotalVehicleItems] = useState(0)
   const [vehicleFormEnabled, setVehicleFormEnabled] = useState(false)
   const [vehicleDataToUpdate, setVehicleDataToUpdate] = useState<VehicleFormData>()
+  const navigate = useNavigate()
   
   const itemsPerPage = 10;
 
@@ -64,9 +66,12 @@ const VehicleTable = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json"
-          }
+          },
+          credentials: 'include'
         }
       );
+      if (response.status === 401 || response.status === 403)
+        navigate("/login")
       const data: VehicleResponseBody = await response.json();
       setVehicles(data.vehicles.map(
         (vehicle, index) => {

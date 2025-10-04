@@ -3,7 +3,7 @@ import { useBusinessConfig } from '@/hooks/useBusinessConfig';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Car, FileText, Calendar, TrendingUp, Plus, Eye } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { act, useEffect, useState } from 'react';
 
 interface MetadataResponse {
@@ -23,11 +23,14 @@ const Dashboard = () => {
   const { config } = useBusinessConfig();
   const [recentActivities, setRecentActivities] = useState<RecentActivityResponse[]>([])
   const [metadata, setMetadata] = useState<MetadataResponse>({totalVehicles: 0, expiringSoon: 0})
+  const navigate = useNavigate()
 
   useEffect(
     () => {
-      fetch(`${BACKEND_URL}/api/v1/vehicle/recent-activity`)
+      fetch(`${BACKEND_URL}/api/v1/vehicle/recent-activity`, {credentials: 'include'})
       .then(response => {
+        if(response.status === 401 || response.status === 403)
+          navigate("/login")
         if(!response.ok)
           throw new Error("Error fetching recent activities from backend")
         return response.json()
@@ -36,7 +39,7 @@ const Dashboard = () => {
         setRecentActivities(responseJson)
       })
 
-      fetch(`${BACKEND_URL}/api/v1/vehicle/metadata`)
+      fetch(`${BACKEND_URL}/api/v1/vehicle/metadata`, {credentials: 'include'})
       .then(response => {
         if(!response.ok)
           throw new Error("Error fetching recent activities from backend")
