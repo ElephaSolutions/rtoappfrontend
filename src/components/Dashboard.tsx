@@ -117,7 +117,7 @@ const Dashboard = () => {
       {/* Welcome Section */}
       <div className="text-center">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Welcome to {config?.brandName}
+          Welcome to Baskar Auto Consultancy
         </h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
           Manage your vehicle records, track document validity, and stay compliant with all requirements.

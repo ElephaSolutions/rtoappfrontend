@@ -235,19 +235,19 @@ const VehicleTable = () => {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-gray-200">
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Vehicle No</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Fitness</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Insurance</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Permit</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Tax</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">PUC</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Contact</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Actions</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">Vehicle No</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">Fitness</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">Insurance</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">Permit</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">Tax</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">PUC</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">Contact</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredVehicles.map((vehicle) => (
-                        <tr key={vehicle.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+                      {filteredVehicles.map((vehicle, index) => (
+                        <tr key={vehicle.id} className={"border-b transition-colors " + ((index % 2 === 0) ? "bg-gray-100": "bg-gray-300")}>
                           <td className="py-4 px-4">
                             <div className="font-medium text-gray-900">{vehicle.vehicleNo}</div>
                           </td>

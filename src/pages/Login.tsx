@@ -104,15 +104,6 @@ const Login: React.FC = () => {
                 Sign In
             </Button>
           </form>
-
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-sm font-medium mb-2">Test Credentials:</h3>
-            <div className="text-xs space-y-1 text-gray-600">
-              <p><strong>Admin:</strong> admin / admin123</p>
-              <p><strong>User:</strong> user1 / user123</p>
-              <p><strong>Officer:</strong> rto_officer / rto123</p>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </div>
