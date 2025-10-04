@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Edit, Trash, Search, Calendar, Phone, Car } from 'lucide-react';
+import { Edit, Trash, Search, Calendar, Phone, Car, NavigationOff } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import VehicleForm from './VehicleForm';
 import {VehicleFormData} from './VehicleForm'
+import { useNavigate } from 'react-router-dom';
 
 interface Vehicle {
   id: number;
@@ -49,6 +50,7 @@ const VehicleTable = () => {
   const [totalVehicleItems, setTotalVehicleItems] = useState(0)
   const [vehicleFormEnabled, setVehicleFormEnabled] = useState(false)
   const [vehicleDataToUpdate, setVehicleDataToUpdate] = useState<VehicleFormData>()
+  const navigate = useNavigate()
   
   const itemsPerPage = 10;
 
@@ -64,9 +66,12 @@ const VehicleTable = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json"
-          }
+          },
+          credentials: 'include'
         }
       );
+      if (response.status === 401 || response.status === 403)
+        navigate("/login")
       const data: VehicleResponseBody = await response.json();
       setVehicles(data.vehicles.map(
         (vehicle, index) => {
@@ -230,19 +235,19 @@ const VehicleTable = () => {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-gray-200">
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Vehicle No</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Fitness</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Insurance</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Permit</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Tax</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">PUC</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Contact</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Actions</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">Vehicle No</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">Fitness</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">Insurance</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">Permit</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">Tax</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">PUC</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">Contact</th>
+                        <th className="text-left py-3 px-4 font-black text-xl text-gray-700">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredVehicles.map((vehicle) => (
-                        <tr key={vehicle.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+                      {filteredVehicles.map((vehicle, index) => (
+                        <tr key={vehicle.id} className={"border-b transition-colors " + ((index % 2 === 0) ? "bg-gray-100": "bg-gray-300")}>
                           <td className="py-4 px-4">
                             <div className="font-medium text-gray-900">{vehicle.vehicleNo}</div>
                           </td>
