@@ -56,6 +56,14 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate()
 
+  const handleVehicleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value.toUpperCase()
+    }))
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -181,7 +189,7 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
                   id="vehicleNo"
                   name="vehicleNo"
                   value={formData.vehicleNo}
-                  onChange={handleChange}
+                  onChange={handleVehicleNumberChange}
                   placeholder="e.g., KA05MX1234"
                   className="mt-1.5 h-11"
                   required
