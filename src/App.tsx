@@ -41,7 +41,7 @@ const App = () => (
                 </>
               } 
             />
-            <Route 
+            {/* <Route 
               path="/license/view" 
               element={
                 <>
@@ -49,7 +49,7 @@ const App = () => (
                   <LicenseView />
                 </>
               } 
-            />
+            /> */}
             <Route
               path="/login"
               element = {<Login/>}
