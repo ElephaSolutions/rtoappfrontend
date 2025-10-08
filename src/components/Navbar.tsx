@@ -22,7 +22,7 @@ const Navbar = () => {
     { to: '/', label: 'Home', icon: Home },
     { to: '/vehicle', label: 'Add Vehicle', icon: Car },
     { to: '/vehicle/view', label: 'View Vehicles', icon: FileText },
-    { to: '/license/view', label: 'License', icon: CreditCard },
+    // { to: '/license/view', label: 'License', icon: CreditCard },
   ];
 
   return (
