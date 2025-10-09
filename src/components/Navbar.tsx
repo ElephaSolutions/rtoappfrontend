@@ -1,10 +1,28 @@
 
 import { useBusinessConfig } from '@/hooks/useBusinessConfig';
-import { NavLink } from 'react-router-dom';
-import { Car, Home, FileText, CreditCard } from 'lucide-react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { Car, Home, FileText, CreditCard, LogOut } from 'lucide-react';
+
+const BACKEND_URL = "https://rtoappbyourself.onrender.com/logout"
 
 const Navbar = () => {
   const { config, loading } = useBusinessConfig();
+  const navigate = useNavigate()
+
+  const handleLogout = (): void => {
+    fetch(
+      BACKEND_URL,
+      {
+        method: "POST",
+        credentials: "include"
+      }
+    ).then(response => {
+      if(response.ok)
+        navigate("/login")
+      else
+        throw new Error("Error calling logout")
+    })
+  }
 
   if (loading) {
     return (
@@ -60,6 +78,13 @@ const Navbar = () => {
                 <span>{label}</span>
               </NavLink>
             ))}
+            <button
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600 hover:text-gray-900 hover:bg-gray-100`}
+              onClick={handleLogout}
+            >
+              <LogOut className='w-4 h-4'/>
+              <span>Logout</span>
+            </button>
           </div>
 
           {/* Mobile menu button - simplified for now */}
