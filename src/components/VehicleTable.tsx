@@ -128,6 +128,7 @@ const VehicleTable = () => {
       BACKEND_URL,
       {
         method: "DELETE",
+        credentials: 'include',
         headers: {
           "vehicle_number": vehicleNumber
         },
