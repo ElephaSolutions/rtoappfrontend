@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { Car, Calendar, Phone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import "flatpickr/dist/themes/light.css";
+import Flatpickr from "react-flatpickr";
 
 export interface VehicleFormData {
   vehicleNo: string;
@@ -201,13 +203,18 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
                   <Calendar className="w-4 h-4" />
                   <span>Fitness Valid Until *</span>
                 </Label>
-                <Input
-                  id="fitnessValid"
-                  name="fitnessValid"
-                  type="date"
+                <Flatpickr 
+                  id='fitnessValid' 
+                  className='mt-1.5 h11 rounded-md border flex w-full border-input p-2.5'
+                  options={{
+                      altInput: true,
+                      altFormat: "d-m-Y",
+                      dateFormat: "Y-m-d",
+                  }}
+                  placeholder='dd/mm/yyyy'
                   value={formData.fitnessValid}
-                  onChange={handleChange}
-                  className="mt-1.5 h-11"
+                  name='fitnessValid'
+                  onChange={(date, dateStr) => {setFormData(prev => ({...prev, fitnessValid: dateStr}))}}
                   required
                 />
               </div>
@@ -217,13 +224,18 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
                   <Calendar className="w-4 h-4" />
                   <span>Insurance Valid Until *</span>
                 </Label>
-                <Input
-                  id="insuranceValid"
-                  name="insuranceValid"
-                  type="date"
+                <Flatpickr 
+                  id='insuranceValid' 
+                  className='mt-1.5 h11 rounded-md border flex w-full border-input p-2.5'
+                  options={{
+                      altInput: true,
+                      altFormat: "d-m-Y",
+                      dateFormat: "Y-m-d",
+                  }}
+                  placeholder='dd/mm/yyyy'
                   value={formData.insuranceValid}
-                  onChange={handleChange}
-                  className="mt-1.5 h-11"
+                  name='insuranceValid'
+                  onChange={(date, dateStr) => {setFormData(prev => ({...prev, insuranceValid: dateStr}))}}
                   required
                 />
               </div>
@@ -233,13 +245,18 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
                   <Calendar className="w-4 h-4" />
                   <span>Permit Valid Until *</span>
                 </Label>
-                <Input
-                  id="permitValid"
-                  name="permitValid"
-                  type="date"
+                <Flatpickr 
+                  id='permitValid' 
+                  className='mt-1.5 h11 rounded-md border flex w-full border-input p-2.5'
+                  options={{
+                      altInput: true,
+                      altFormat: "d-m-Y",
+                      dateFormat: "Y-m-d",
+                  }}
+                  placeholder='dd/mm/yyyy'
                   value={formData.permitValid}
-                  onChange={handleChange}
-                  className="mt-1.5 h-11"
+                  name='permitValid'
+                  onChange={(date, dateStr) => {setFormData(prev => ({...prev, permitValid: dateStr}))}}
                   required
                 />
               </div>
@@ -249,13 +266,18 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
                   <Calendar className="w-4 h-4" />
                   <span>Tax Valid Until *</span>
                 </Label>
-                <Input
-                  id="taxValid"
-                  name="taxValid"
-                  type="date"
+                <Flatpickr 
+                  id='taxValid' 
+                  className='mt-1.5 h11 rounded-md border flex w-full border-input p-2.5'
+                  options={{
+                      altInput: true,
+                      altFormat: "d-m-Y",
+                      dateFormat: "Y-m-d",
+                  }}
+                  placeholder='dd/mm/yyyy'
                   value={formData.taxValid}
-                  onChange={handleChange}
-                  className="mt-1.5 h-11"
+                  name='taxValid'
+                  onChange={(date, dateStr) => {setFormData(prev => ({...prev, taxValid: dateStr}))}}
                   required
                 />
               </div>
@@ -265,13 +287,18 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
                   <Calendar className="w-4 h-4" />
                   <span>PUC Valid Until *</span>
                 </Label>
-                <Input
-                  id="pucValid"
-                  name="pucValid"
-                  type="date"
+                <Flatpickr 
+                  id='pucValid' 
+                  className='mt-1.5 h11 rounded-md border flex w-full border-input p-2.5'
+                  options={{
+                      altInput: true,
+                      altFormat: "d-m-Y",
+                      dateFormat: "Y-m-d",
+                  }}
+                  placeholder='dd/mm/yyyy'
                   value={formData.pucValid}
-                  onChange={handleChange}
-                  className="mt-1.5 h-11"
+                  name='pucValid'
+                  onChange={(date, dateStr) => {setFormData(prev => ({...prev, pucValid: dateStr}))}}
                   required
                 />
               </div>
