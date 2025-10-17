@@ -17,9 +17,10 @@ interface Vehicle {
   fitnessValid: string;
   insuranceValid: string;
   permitValid: string;
-  taxValid: string;
+  taxValid: string | null;
   pucValid: string;
   contactNumber: string;
+  lifeTimeTaxPaid: boolean;
 }
 
 interface VehicleResponseItem {
@@ -27,9 +28,10 @@ interface VehicleResponseItem {
   fcExpiryDate: string,
   insuranceExpiryDate: string,
   permitExpiryDate: string,
-  taxDueDate: string,
+  taxDueDate: string | null,
   pollutionCertificateExpiryDate: string,
   contactNumber: string,
+  lifeTimeTaxPaid: boolean,
 }
 
 interface VehicleResponseBody {
@@ -81,9 +83,10 @@ const VehicleTable = () => {
             fitnessValid: new Date(vehicle.fcExpiryDate).toDateString(),
             insuranceValid: new Date(vehicle.insuranceExpiryDate).toDateString(),
             permitValid: new Date(vehicle.permitExpiryDate).toDateString(),
-            taxValid: new Date(vehicle.taxDueDate).toDateString(),
+            taxValid: vehicle.taxDueDate == null ? null : new Date(vehicle.taxDueDate).toDateString(),
             pucValid: new Date(vehicle.pollutionCertificateExpiryDate).toDateString(),
             contactNumber: vehicle.contactNumber,
+            lifeTimeTaxPaid: vehicle.lifeTimeTaxPaid,
           }
         }
       ));
@@ -114,11 +117,11 @@ const VehicleTable = () => {
       fitnessValid: parseAndGetDateStringForForm(vehicle.fitnessValid),
       insuranceValid: parseAndGetDateStringForForm(vehicle.insuranceValid),
       permitValid: parseAndGetDateStringForForm(vehicle.permitValid),
-      taxValid: parseAndGetDateStringForForm(vehicle.taxValid),
+      taxValid: vehicle.taxValid == null ? '' : parseAndGetDateStringForForm(vehicle.taxValid),
       pucValid: parseAndGetDateStringForForm(vehicle.pucValid),
-      contactNumber: vehicle.contactNumber
+      contactNumber: vehicle.contactNumber,
+      lifeTimeTaxPaid: vehicle.lifeTimeTaxPaid
     }
-    console.log(vehicleFormData)
     setVehicleDataToUpdate(vehicleFormData)
     setVehicleFormEnabled(true)
   }
@@ -272,8 +275,8 @@ const VehicleTable = () => {
                           </td>
                           <td className="py-4 px-4">
                             <div className="space-y-1">
-                              <div className="text-sm text-gray-600">{vehicle.taxValid}</div>
-                              {getValidityBadge(vehicle.taxValid)}
+                              <div className="text-sm text-gray-600">{vehicle.lifeTimeTaxPaid ? 'Paid life time tax' : vehicle.taxValid}</div>
+                              {!vehicle.lifeTimeTaxPaid && getValidityBadge(vehicle.taxValid)}
                             </div>
                           </td>
                           <td className="py-4 px-4">

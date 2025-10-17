@@ -19,6 +19,7 @@ export interface VehicleFormData {
   taxValid: string;
   pucValid: string;
   contactNumber: string;
+  lifeTimeTaxPaid: boolean;
 }
 
 interface VehicleRequestBody {
@@ -29,6 +30,7 @@ interface VehicleRequestBody {
     taxDueDate: string,
     pollutionCertificateExpiryDate: string,
     contactNumber: string,
+    lifeTimeTaxPaid: boolean,
 }
 
 const BACKEND_URL = "https://rtoappbyourself.onrender.com/api/v1/vehicle";
@@ -40,7 +42,8 @@ const emptyFormDataValues: VehicleFormData = {
   permitValid: '',
   taxValid: '',
   pucValid: '',
-  contactNumber: ''
+  contactNumber: '',
+  lifeTimeTaxPaid: false,
 }
 
 const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}: {formDataValues: VehicleFormData, onSubmit: () => void}) => {
@@ -52,7 +55,8 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
     permitValid: formDataValues.permitValid,
     taxValid: formDataValues.taxValid,
     pucValid: formDataValues.pucValid,
-    contactNumber: formDataValues.contactNumber
+    contactNumber: formDataValues.contactNumber,
+    lifeTimeTaxPaid: formDataValues.lifeTimeTaxPaid,
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,7 +79,7 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
   };
 
   const validateForm = () => {
-    const required = ['vehicleNo', 'fitnessValid', 'insuranceValid', 'permitValid', 'taxValid', 'pucValid', 'contactNumber'];
+    const required = ['vehicleNo', 'fitnessValid', 'insuranceValid', 'permitValid', 'pucValid', 'contactNumber'];
     const missing = required.filter(field => !formData[field as keyof VehicleFormData]);
     
     if (missing.length > 0) {
@@ -116,6 +120,7 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
       taxDueDate: formData.taxValid,
       pollutionCertificateExpiryDate: formData.pucValid,
       contactNumber: formData.contactNumber,
+      lifeTimeTaxPaid: formData.lifeTimeTaxPaid,
     }
 
     try {
@@ -155,7 +160,8 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
         permitValid: '',
         taxValid: '',
         pucValid: '',
-        contactNumber: ''
+        contactNumber: '',
+        lifeTimeTaxPaid: false
       });
       setIsSubmitting(false);
       onSubmit()
@@ -262,9 +268,17 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
               </div>
 
               <div>
-                <Label htmlFor="taxValid" className="text-sm font-medium text-gray-700 flex items-center space-x-2">
-                  <Calendar className="w-4 h-4" />
-                  <span>Tax Valid Until *</span>
+                <Label htmlFor="taxValid" className="text-sm font-medium text-gray-700 flex justify-between space-x-2">
+                  <div className="text-xs flex items-center space-x-2">
+                    <Calendar className="w-4 h-4" />
+                    <span>Tax Valid Until *</span>
+                  </div>
+                  <div className='space-x-2'>
+                    <label htmlFor='isLttPaid' className="text-xs font-medium text-gray-700">
+                      <span>Paid Life Time Tax</span>
+                    </label>
+                    <input type='checkbox' id='isLttPaid' name='lifeTimeTaxPaid' value={'true'} checked={formData.lifeTimeTaxPaid} onChange={() => setFormData(prev => ({...prev, taxValid: '', lifeTimeTaxPaid: !prev.lifeTimeTaxPaid}))}/>
+                  </div>
                 </Label>
                 <Flatpickr 
                   id='taxValid' 
@@ -278,7 +292,7 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
                   value={formData.taxValid}
                   name='taxValid'
                   onChange={(date, dateStr) => {setFormData(prev => ({...prev, taxValid: dateStr}))}}
-                  required
+                  required disabled={formData.lifeTimeTaxPaid}
                 />
               </div>
 
