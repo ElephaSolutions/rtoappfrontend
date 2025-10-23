@@ -275,7 +275,7 @@ const VehicleTable = () => {
                           </td>
                           <td className="py-4 px-4">
                             <div className="space-y-1">
-                              <div className="text-sm text-gray-600">{vehicle.lifeTimeTaxPaid ? 'Paid life time tax' : vehicle.taxValid}</div>
+                              <div className="text-sm text-gray-600">{vehicle.lifeTimeTaxPaid ? 'Paid LTT' : vehicle.taxValid}</div>
                               {!vehicle.lifeTimeTaxPaid && getValidityBadge(vehicle.taxValid)}
                             </div>
                           </td>

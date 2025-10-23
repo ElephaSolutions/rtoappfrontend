@@ -216,6 +216,7 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
                       altInput: true,
                       altFormat: "d-m-Y",
                       dateFormat: "Y-m-d",
+                      allowInput: true
                   }}
                   placeholder='dd/mm/yyyy'
                   value={formData.fitnessValid}
@@ -237,6 +238,7 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
                       altInput: true,
                       altFormat: "d-m-Y",
                       dateFormat: "Y-m-d",
+                      allowInput: true,
                   }}
                   placeholder='dd/mm/yyyy'
                   value={formData.insuranceValid}
@@ -258,6 +260,7 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
                       altInput: true,
                       altFormat: "d-m-Y",
                       dateFormat: "Y-m-d",
+                      allowInput: true,
                   }}
                   placeholder='dd/mm/yyyy'
                   value={formData.permitValid}
@@ -275,7 +278,7 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
                   </div>
                   <div className='space-x-2'>
                     <label htmlFor='isLttPaid' className="text-xs font-medium text-gray-700">
-                      <span>Paid Life Time Tax</span>
+                      <span>Paid LTT</span>
                     </label>
                     <input type='checkbox' id='isLttPaid' name='lifeTimeTaxPaid' value={'true'} checked={formData.lifeTimeTaxPaid} onChange={() => setFormData(prev => ({...prev, taxValid: '', lifeTimeTaxPaid: !prev.lifeTimeTaxPaid}))}/>
                   </div>
@@ -287,6 +290,7 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
                       altInput: true,
                       altFormat: "d-m-Y",
                       dateFormat: "Y-m-d",
+                      allowInput: true,
                   }}
                   placeholder='dd/mm/yyyy'
                   value={formData.taxValid}
@@ -308,6 +312,7 @@ const VehicleForm = ({formDataValues = emptyFormDataValues, onSubmit = () => {}}
                       altInput: true,
                       altFormat: "d-m-Y",
                       dateFormat: "Y-m-d",
+                      allowInput: true,
                   }}
                   placeholder='dd/mm/yyyy'
                   value={formData.pucValid}
