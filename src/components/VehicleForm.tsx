@@ -33,7 +33,7 @@ interface VehicleRequestBody {
     lifeTimeTaxPaid: boolean,
 }
 
-const BACKEND_URL = "https://rtoappbyourself.onrender.com/api/v1/vehicle";
+const BACKEND_URL = `${import.meta.env.VITE_BACKEND_HOST}/api/v1/vehicle`;
 
 const emptyFormDataValues: VehicleFormData = {
   vehicleNo: '',

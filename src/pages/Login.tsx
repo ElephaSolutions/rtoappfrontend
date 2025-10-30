@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
 
-const BACKEND_URL = "https://rtoappbyourself.onrender.com"
+const BACKEND_URL = import.meta.env.VITE_BACKEND_HOST
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');

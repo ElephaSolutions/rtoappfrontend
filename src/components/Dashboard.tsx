@@ -17,7 +17,7 @@ interface RecentActivityResponse {
   timestamp: string;
 }
 
-const BACKEND_URL = "https://rtoappbyourself.onrender.com"
+const BACKEND_URL = import.meta.env.VITE_BACKEND_HOST
 
 const Dashboard = () => {
   const { config } = useBusinessConfig();
