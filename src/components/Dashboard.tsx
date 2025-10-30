@@ -52,16 +52,26 @@ const Dashboard = () => {
   )
 
   const getActivityTimeString = (activity: RecentActivityResponse): string => {
-    const timeSinceActivityOccuredInMilli = Math.abs(new Date() - new Date(activity.timestamp))
-    const timeSinceActivityOccuredInSeconds = timeSinceActivityOccuredInMilli / 1000
-    const timeSinceActivityOccuredInMinutes = timeSinceActivityOccuredInSeconds / 60
-    const timeSinceActivityOccuredInHours = timeSinceActivityOccuredInMinutes / 60
-    if (timeSinceActivityOccuredInHours > 1)
-      return `${Math.ceil(timeSinceActivityOccuredInHours)} hours ago`
-    else if (timeSinceActivityOccuredInMinutes > 1)
-      return `${Math.ceil(timeSinceActivityOccuredInMinutes)} minutes ago`
-    else 
-      return `${Math.ceil(timeSinceActivityOccuredInSeconds)} seconds ago`
+    const currentDate = new Date()
+    const activityDate = new Date(activity.timestamp)
+    if((currentDate.getFullYear() - activityDate.getFullYear()) >= 1)
+      return `${currentDate.getFullYear() - activityDate.getFullYear()} years ago`
+    else if((currentDate.getMonth() - activityDate.getMonth()) >= 1)
+      return `${currentDate.getMonth() - activityDate.getMonth()} months ago`
+    else if((currentDate.getDate() - activityDate.getDate()) >= 1)
+      return `${currentDate.getDate() - activityDate.getDate()} days ago`
+    else {
+      const timeSinceActivityOccuredInMilli = Math.abs(currentDate - activityDate)
+      const timeSinceActivityOccuredInSeconds = timeSinceActivityOccuredInMilli / 1000
+      const timeSinceActivityOccuredInMinutes = timeSinceActivityOccuredInSeconds / 60
+      const timeSinceActivityOccuredInHours = timeSinceActivityOccuredInMinutes / 60
+      if (timeSinceActivityOccuredInHours > 1)
+        return `${Math.ceil(timeSinceActivityOccuredInHours)} hours ago`
+      else if (timeSinceActivityOccuredInMinutes > 1)
+        return `${Math.ceil(timeSinceActivityOccuredInMinutes)} minutes ago`
+      else 
+        return `${Math.ceil(timeSinceActivityOccuredInSeconds)} seconds ago`
+    }
   }
 
   const stats = [
