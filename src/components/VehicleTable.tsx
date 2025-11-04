@@ -35,8 +35,8 @@ interface VehicleResponseItem {
 }
 
 interface VehicleResponseBody {
-  vehicles: VehicleResponseItem[],
-  totalVehicles: number,
+  content: VehicleResponseItem[],
+  totalElements: number,
 }
 
 const BACKEND_URL = `${import.meta.env.VITE_BACKEND_HOST}/api/v1/vehicle`;
@@ -75,7 +75,7 @@ const VehicleTable = () => {
       if (response.status === 401 || response.status === 403)
         navigate("/login")
       const data: VehicleResponseBody = await response.json();
-      setVehicles(data.vehicles.map(
+      setVehicles(data.content.map(
         (vehicle, index) => {
           return {
             id: index,
@@ -90,7 +90,7 @@ const VehicleTable = () => {
           }
         }
       ));
-      setTotalVehicleItems(data.totalVehicles)
+      setTotalVehicleItems(data.totalElements)
     } catch (error) {
       console.error('Failed to load vehicles:', error);
       toast({

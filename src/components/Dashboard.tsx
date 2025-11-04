@@ -9,6 +9,7 @@ import { act, useEffect, useState } from 'react';
 interface MetadataResponse {
   totalVehicles: number;
   expiringSoon: number;
+  agencyName: string;
 }
 
 interface RecentActivityResponse {
@@ -22,7 +23,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_HOST
 const Dashboard = () => {
   const { config } = useBusinessConfig();
   const [recentActivities, setRecentActivities] = useState<RecentActivityResponse[]>([])
-  const [metadata, setMetadata] = useState<MetadataResponse>({totalVehicles: 0, expiringSoon: 0})
+  const [metadata, setMetadata] = useState<MetadataResponse>({totalVehicles: 0, expiringSoon: 0, agencyName: ""})
   const navigate = useNavigate()
 
   useEffect(
@@ -127,7 +128,7 @@ const Dashboard = () => {
       {/* Welcome Section */}
       <div className="text-center">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Welcome to Baskar Auto Consultancy
+          {`Welcome to ${metadata.agencyName}`}
         </h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
           Manage your vehicle records, track document validity, and stay compliant with all requirements.
