@@ -9,6 +9,7 @@ import { act, useEffect, useState } from 'react';
 interface MetadataResponse {
   totalVehicles: number;
   expiringSoon: number;
+  agencyName: string;
 }
 
 interface RecentActivityResponse {
@@ -17,12 +18,12 @@ interface RecentActivityResponse {
   timestamp: string;
 }
 
-const BACKEND_URL = "https://rtoappbyourself.onrender.com"
+const BACKEND_URL = import.meta.env.VITE_BACKEND_HOST
 
 const Dashboard = () => {
   const { config } = useBusinessConfig();
   const [recentActivities, setRecentActivities] = useState<RecentActivityResponse[]>([])
-  const [metadata, setMetadata] = useState<MetadataResponse>({totalVehicles: 0, expiringSoon: 0})
+  const [metadata, setMetadata] = useState<MetadataResponse>({totalVehicles: 0, expiringSoon: 0, agencyName: ""})
   const navigate = useNavigate()
 
   useEffect(
@@ -52,16 +53,26 @@ const Dashboard = () => {
   )
 
   const getActivityTimeString = (activity: RecentActivityResponse): string => {
-    const timeSinceActivityOccuredInMilli = Math.abs(new Date() - new Date(activity.timestamp))
-    const timeSinceActivityOccuredInSeconds = timeSinceActivityOccuredInMilli / 1000
-    const timeSinceActivityOccuredInMinutes = timeSinceActivityOccuredInSeconds / 60
-    const timeSinceActivityOccuredInHours = timeSinceActivityOccuredInMinutes / 60
-    if (timeSinceActivityOccuredInHours > 1)
-      return `${Math.ceil(timeSinceActivityOccuredInHours)} hours ago`
-    else if (timeSinceActivityOccuredInMinutes > 1)
-      return `${Math.ceil(timeSinceActivityOccuredInMinutes)} minutes ago`
-    else 
-      return `${Math.ceil(timeSinceActivityOccuredInSeconds)} seconds ago`
+    const currentDate = new Date()
+    const activityDate = new Date(activity.timestamp)
+    if((currentDate.getFullYear() - activityDate.getFullYear()) >= 1)
+      return `${currentDate.getFullYear() - activityDate.getFullYear()} years ago`
+    else if((currentDate.getMonth() - activityDate.getMonth()) >= 1)
+      return `${currentDate.getMonth() - activityDate.getMonth()} months ago`
+    else if((currentDate.getDate() - activityDate.getDate()) >= 1)
+      return `${currentDate.getDate() - activityDate.getDate()} days ago`
+    else {
+      const timeSinceActivityOccuredInMilli = Math.abs(currentDate - activityDate)
+      const timeSinceActivityOccuredInSeconds = timeSinceActivityOccuredInMilli / 1000
+      const timeSinceActivityOccuredInMinutes = timeSinceActivityOccuredInSeconds / 60
+      const timeSinceActivityOccuredInHours = timeSinceActivityOccuredInMinutes / 60
+      if (timeSinceActivityOccuredInHours > 1)
+        return `${Math.ceil(timeSinceActivityOccuredInHours)} hours ago`
+      else if (timeSinceActivityOccuredInMinutes > 1)
+        return `${Math.ceil(timeSinceActivityOccuredInMinutes)} minutes ago`
+      else 
+        return `${Math.ceil(timeSinceActivityOccuredInSeconds)} seconds ago`
+    }
   }
 
   const stats = [
@@ -117,7 +128,7 @@ const Dashboard = () => {
       {/* Welcome Section */}
       <div className="text-center">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Welcome to Baskar Auto Consultancy
+          {`Welcome to ${metadata.agencyName}`}
         </h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
           Manage your vehicle records, track document validity, and stay compliant with all requirements.

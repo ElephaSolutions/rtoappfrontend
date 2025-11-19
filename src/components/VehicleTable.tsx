@@ -35,11 +35,11 @@ interface VehicleResponseItem {
 }
 
 interface VehicleResponseBody {
-  vehicles: VehicleResponseItem[],
-  totalVehicles: number,
+  content: VehicleResponseItem[],
+  totalElements: number,
 }
 
-const BACKEND_URL = "https://rtoappbyourself.onrender.com/api/v1/vehicle";
+const BACKEND_URL = `${import.meta.env.VITE_BACKEND_HOST}/api/v1/vehicle`;
 const PAGE_QUERY_PARAM = "page";
 const PAGE_SIZE_QUERY_PARAM = "page_size";
 
@@ -75,7 +75,7 @@ const VehicleTable = () => {
       if (response.status === 401 || response.status === 403)
         navigate("/login")
       const data: VehicleResponseBody = await response.json();
-      setVehicles(data.vehicles.map(
+      setVehicles(data.content.map(
         (vehicle, index) => {
           return {
             id: index,
@@ -90,7 +90,7 @@ const VehicleTable = () => {
           }
         }
       ));
-      setTotalVehicleItems(data.totalVehicles)
+      setTotalVehicleItems(data.totalElements)
     } catch (error) {
       console.error('Failed to load vehicles:', error);
       toast({

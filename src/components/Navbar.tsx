@@ -3,7 +3,7 @@ import { useBusinessConfig } from '@/hooks/useBusinessConfig';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Car, Home, FileText, CreditCard, LogOut } from 'lucide-react';
 
-const BACKEND_URL = "https://rtoappbyourself.onrender.com/logout"
+const BACKEND_URL = `${import.meta.env.VITE_BACKEND_HOST}/logout`
 
 const Navbar = () => {
   const { config, loading } = useBusinessConfig();
