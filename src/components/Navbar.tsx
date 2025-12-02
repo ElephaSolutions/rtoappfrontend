@@ -2,10 +2,12 @@
 import { useBusinessConfig } from '@/hooks/useBusinessConfig';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Car, Home, FileText, CreditCard, LogOut } from 'lucide-react';
+import { useState } from 'react';
 
 const BACKEND_URL = `${import.meta.env.VITE_BACKEND_HOST}/logout`
 
 const Navbar = () => {
+  const [ displayMenuDropdown, setDisplayMenuDropdown ] = useState(false);
   const { config, loading } = useBusinessConfig();
   const navigate = useNavigate()
 
@@ -44,7 +46,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md border-b border-gray-200 z-50">
+    <nav className="top-0 left-0 right-0 bg-white/80 backdrop-blur-md border-b border-gray-200 z-50 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-4">
@@ -89,11 +91,37 @@ const Navbar = () => {
 
           {/* Mobile menu button - simplified for now */}
           <div className="md:hidden">
-            <button className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100">
+            <button className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100" onClick={() => setDisplayMenuDropdown((currentValue) => !currentValue)}>
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
+            {
+              displayMenuDropdown && 
+              <div className="items-center space-x-1 absolute top-100 right-0 bg-[#fdfdfe]" onClick={() => setDisplayMenuDropdown((currentValue) => !currentValue)}>
+                {navItems.map(({ to, label, icon: Icon }) => (
+                  <NavLink
+                    key={to}
+                    to={to}
+                    className={({ isActive }) =>
+                      `flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                        'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      }`
+                    }
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{label}</span>
+                  </NavLink>
+                ))}
+                <button
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600 hover:text-gray-900 hover:bg-gray-100`}
+                  onClick={handleLogout}
+                >
+                  <LogOut className='w-4 h-4'/>
+                  <span>Logout</span>
+                </button>
+              </div>
+            }
           </div>
         </div>
       </div>
